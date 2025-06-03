@@ -1,14 +1,19 @@
-name: Snyk SCA Scan
-on: push
+name: Snykscan
+on:
+  push
+ 
 jobs:
-  security:
+  SNykCode:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-        continue-on-error: true
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
+    - uses: actions/checkout@v3
+    - name: SnykcodeScanning
+      run: |
+         echo "----------Download Latest Snyk CLI-----------"
+         curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.1200.0/snyk-linux"
+         chmod +x snyk
+         ls -lrt
+         echo "----------Authenticating Snyk-----------"
+         ./snyk auth ${{secrets.Snyk_token}}
+         echo "----------Snyk  Scanning-----------"
+         ./snyk test --all-projects -d
